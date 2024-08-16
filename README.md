@@ -63,6 +63,7 @@ There you will be able to monitor the status and results of these executions plu
 
 ## Project Structure
 
+```
 ALOWARETP/
 │
 ├── .github/
@@ -88,14 +89,27 @@ ALOWARETP/
 ├── package-lock.json
 ├── package.json
 └── README.md
+```
 
 -.github/workflows: Contains the yml file for GitHub actions integration.
+
 -cypress/: Contains all Cypress test files and configuration.
+
 -pages: Contains the Page Objects classes for the Page Object Pattern implementation.
+
 -reports: Once you run the repository for the first time this folder will appear, including the index.html file where you can see the mochawesome reporter integration results.
+
 -screenshots: Contains an image of the last test execution.
+
 -support: Includes a file with custom commands meant to contribute to code reusability.
+
 -tests: Includes the test specs.
+
 -cypress.config.js: Cypress configuration file.
+
 -package.json: Project dependencies and scripts.
+
 -README.md: This file.
+
+
+Solution written by Agustin Leonangeli
