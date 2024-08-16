@@ -1,6 +1,6 @@
 import { landingPage } from "../../pages/landingPage";
 import { faker } from "@faker-js/faker";
-
+import { SUPP } from "../../support/constants";
 const landing = new landingPage();
 
 describe("Landing page tests", () => {
@@ -12,56 +12,60 @@ describe("Landing page tests", () => {
       false
   );
   beforeEach(() => {
-    cy.intercept("GET", "https://aloware.com/").as("waitOnLoad");
     cy.visit("/");
   });
 
   it("Should be able to access all the navbar sections", () => {
-    //Validate the website
+    //Validate successful access to the landing page by asserting the title
     cy.validateSuccessfulAccess(
-      "https://aloware.com/",
+      SUPP.landingUrl,
       "Top-Rated Contact Center Software | Built For Your Favorite CRM"
     );
+    //Validate every clickable button in the navbar works by clicking it and asserting its title
     cy.clickAndVerify(landing.navbarSolutionsBtn);
-    cy.validateSuccessfulAccess(
-      "https://aloware.com/solution/",
-      "Solutions - Aloware"
-    );
+    cy.validateSuccessfulAccess(SUPP.SolutionsUrl, "Solutions - Aloware");
     cy.navigateBack();
     cy.clickAndVerify(landing.navbarFeaturesBtn);
-    cy.validateSuccessfulAccess(
-      "https://aloware.com/features/",
-      "Features - Aloware"
-    );
+    cy.validateSuccessfulAccess(SUPP.featuresUrl, "Features - Aloware");
     cy.navigateBack();
     cy.clickAndVerify(landing.navbarIntegrationsBtn);
-    cy.validateSuccessfulAccess(
-      "https://aloware.com/integrations/",
-      "Integrations - Aloware"
-    );
+    cy.validateSuccessfulAccess(SUPP.integrationsUrl, "Integrations - Aloware");
     cy.navigateBack();
     cy.clickAndVerify(landing.navbarPricingBtn);
-    cy.validateSuccessfulAccess(
-      "https://aloware.com/pricing/",
-      "Pricing - Aloware"
-    );
+    cy.validateSuccessfulAccess(SUPP.pricingUrl, "Pricing - Aloware");
     cy.navigateBack();
     cy.clickAndVerify(landing.navbarAiSmsBtn);
-    cy.validateSuccessfulAccess(
-      "https://aloware.com/ai-bot/",
-      "Aloware - AI SMS Bot"
+    cy.validateSuccessfulAccess(SUPP.aiBotUrl, "Aloware - AI SMS Bot");
+  });
+
+  it("Shoould show an error message when the newsletter form is fullfilled with a @gmail or @hotmail email ", () => {
+    //Scroll to the bottom of the landing page where the newsletter form is located
+    cy.scrollTo("bottom");
+    //Verify the presence of the form elements
+    cy.clickAndVerify(landing.newsletterFormTitle);
+    cy.clickAndVerify(landing.newslettterInput);
+    //Fulfill the form with an invalid email
+    landing.fulfillInputAndSubmitForm(faker.internet.email());
+    //Validate the error message text by comparing it
+    cy.validateText(
+      landing.newsletterErrorMessage,
+      "Please enter a different email address. This form does not accept addresses from"
     );
   });
 
-  it.only("Should be able subscribe to the newsletter", () => {
-    cy.wait("@waitOnLoad");
+  it("Should be able to subscribe to the newsletter successfully ", () => {
+    const email = Cypress.env("EMAIL");
+    //Scroll to the bottom of the landing page where the newsletter form is located
     cy.scrollTo("bottom");
-    cy.get('input[name="email"]').scrollIntoView().should("be.visible");
-    //cy.get("#email-afd645e7-d218-4db7-9e49-745f913de097").type(
-    //   faker.internet.email()
-    // );
-    //landing.newslettterInput().type(faker.internet.email());
-    //cy.scrollAndAssertVisible(landing.newslettterInput);
-    //landing.newslettterInput().type(faker.internet.email);
+    //Verify the presence of the form elements
+    cy.clickAndVerify(landing.newsletterFormTitle);
+    cy.clickAndVerify(landing.newslettterInput);
+    //Fulfill the form with a valid email
+    landing.fulfillInputAndSubmitForm(email);
+    //Validate the success message text by comparing it
+    cy.validateText(
+      landing.newsletterSuccessMessage,
+      "Thanks for subscribing to our newsletter."
+    );
   });
 });

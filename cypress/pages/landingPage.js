@@ -13,7 +13,6 @@ export class landingPage {
   }
   navbarFeaturesBtn() {
     cy.get(".three-col > :nth-child(1)");
-    //cy.get('a[href="https://aloware.com/features/"]');
   }
   navbarIntegrationsBtn() {
     cy.get('a[href="https://aloware.com/integrations/"]');
@@ -25,9 +24,33 @@ export class landingPage {
     cy.get('a[href="https://aloware.com/ai-bot/"]');
   }
   newslettterInput() {
-    cy.get('input[name="email"]');
+    return cy.get('input[name="email"]');
   }
+
   newsletterSubmitBtn() {
-    cy.get('input[type="submit"]');
+    return cy.get('input[type="submit"]');
+  }
+
+  newsletterFormTitle() {
+    return cy.get(".newsletter-form > h3");
+  }
+
+  newsletterErrorMessage() {
+    return cy.get(".hs-error-msg");
+  }
+
+  newsletterSuccessMessage() {
+    return cy.get(".submitted-message > p");
+  }
+
+  fulfillInputAndSubmitForm(text) {
+    this.newslettterInput().type(text);
+    this.newsletterSubmitBtn().click();
+  }
+
+  validateErrorMessage(expectedText) {
+    this.newsletterErrorMessage()
+      .should("be.visible")
+      .and("contain.text", expectedText);
   }
 }

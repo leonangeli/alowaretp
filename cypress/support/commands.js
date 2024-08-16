@@ -37,6 +37,9 @@ Cypress.Commands.add("navigateBack", () => {
   cy.go("back");
 });
 
-Cypress.Commands.add("scrollAndAssertVisible", (selector) => {
-  cy.get(selector).scrollIntoView().should("be.visible");
+Cypress.Commands.add("validateText", (selector, expectedText) => {
+  cy.get(selector)
+    .should("be.visible")
+    .invoke("text")
+    .should("contain", expectedText);
 });
